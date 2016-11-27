@@ -1,0 +1,115 @@
+<html>
+<title>Slider</title>
+<style>	
+    .big
+	{
+		width:200px;
+		height: 200px;		
+		overflow: hidden;
+	    margin: 20px;	
+	}
+	.block_sl{		
+	    border: 1px solid gray;
+		overflow: hidden;
+		margin: 20px;
+	}
+	.small img {
+		width: 50px;
+		height: 50px;
+	    margin: 2px 2px;
+		float: left;
+	}
+	.but_sl {
+		margin: 0 20px;
+	}
+	.active {
+		opacity: 0.3;
+	}	
+</style>
+<body>
+<div class = "big"><img src = "1.jpg"/></div>
+	<div class = "block_sl">
+		<div class = "small">
+			<img src = "1.jpg"/>
+			<img src = "2.jpg"/>
+			<img src = "3.jpg"/>
+			<img src = "4.jpg"/>
+			<img src = "5.jpg"/>
+		</div>	    
+	</div>
+<div class = "but_sl">
+	<input type = "button" class = "butPrev" value = "PREV"/>
+    <input type = "button" class = "butNext" value = "NEXT"/>   
+</div>   
+<script>
+		function Slider(wdsl){
+			this.wdsl = wdsl;	
+			this.block_sl = document.querySelector('.block_sl'); 
+			this.small = document.querySelector('.small'); 
+			this.count = this.small.children.length;	
+			this.big = document.querySelector('.big img');	
+			this.widthImg = parseInt(getComputedStyle(this.small.firstElementChild).width);
+			this.widthBlockImg = (this.widthImg + 4) * this.wdsl;
+			this.block_sl.style.cssText = 'width:'+ this.widthBlockImg + 'px';
+			this.widthSmall = (this.widthImg + 12) * this.count;
+			this.small.style.cssText = 'width:'+ this.widthSmall + 'px';
+			this.butNext = document.querySelector('.butNext'); 
+			this.butPrev = document.querySelector('.butPrev'); 
+
+			this.small.addEventListener('click', this.bigImg.bind(this));
+			this.butNext.addEventListener('click', this.next.bind(this));
+			this.butPrev.addEventListener('click', this.prev.bind(this));
+			this.small.children[0].className = 'active';	 
+	 }	 
+	  Slider.prototype.bigImg = function(e)
+	 {
+			var target = e.target;
+			var src = e.target.src;			
+			this.big.setAttribute("src", src);
+			for(i=0; i < this.small.children.length; i++)
+			{
+			  if(this.small.children[i].className == 'active')
+				{	
+				  this.small.children[i].classList.remove('active');				 		
+					break;					
+				}				
+			}		
+			target.className = 'active';	
+	 }
+	Slider.prototype.next = function ()
+	{
+	for(i=0; i < this.small.children.length; i++)
+	{
+			if(this.small.children[i].className == 'active'){	
+				this.small.children[i].classList.remove('active');
+				this.nxt = this.small.children[i].nextElementSibling.classList.add('active');			
+				break;					
+			}
+			if(this.small.children[2].className == 'active')
+			{
+				this.cloneEl = this.small.firstElementChild.cloneNode(true);
+				this.small.appendChild(this.cloneEl).className = '';
+				//console.log(this.small);
+				this.small.removeChild(this.small.firstElementChild);
+			}	
+		}		
+	}			
+    Slider.prototype.prev = function() {
+	for(i=0; i < this.small.children.length; i++)
+		{
+			if(this.small.children[i].className == 'active'){			
+				if(this.small.children[0].className == 'active'){						
+						this.cloneLastEl = this.small.lastElementChild.cloneNode(true);
+						this.small.firstElementChild.insertAdjacentElement('beforeBegin', this.cloneLastEl);										
+						this.small.removeChild(this.small.lastElementChild);						
+				}else{					
+						this.small.children[i].classList.remove('active');
+						this.nxt = this.small.children[--i].classList.add('active');								
+					}					
+			}					
+		}
+	}		
+	new Slider(3);
+</script>
+</body>
+</html>
